@@ -1,33 +1,34 @@
 package com.Zoo;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
-abstract class Aviary<T> {
+class Aviary<E> {
     private int capacity;
-    private ArrayList<? super Animal> aviary = new ArrayList<>();
+    private List<E> aviary = new ArrayList<E>();
 
+    // set initial capacity
     Aviary(int capacity){
         this.capacity = capacity;
     }
 
-    public void showAnimals() {
-        this.aviary.stream()
-                .filter(Objects::nonNull)
-                .forEach(System.out::println);
-    }
-
-    public void addAnimal(Animal animal){
-        if(this.getOccupied() < this.capacity){
-            this.aviary.add(animal);
-        } else {
+    // adds animal to avial
+    public void add(E animal){
+        if(isFull()){
             throw new ArithmeticException("Aviary is full. Please try again later");
         }
+        aviary.add(animal);
     }
 
-    public void removeAnimal(Animal animal){
+    // get by index
+    public E getItem(int index) {
+        return aviary.get(index);
+    }
+
+    // removes animal from avial
+    public void remove(E animal){
         try{
-            this.aviary.remove(animal);
+            aviary.remove(animal);
         } catch (Exception e){
             throw new IllegalStateException("There is no such animal at the aviary");
         }
@@ -38,7 +39,13 @@ abstract class Aviary<T> {
         return capacity;
     }
 
+    // get occupiedPlaces
     int getOccupied(){
-        return this.aviary.size();
+        return aviary.size();
+    }
+
+    // check if is full
+    private Boolean isFull(){
+        return getOccupied() >= capacity;
     }
 }
